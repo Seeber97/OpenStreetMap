@@ -36,7 +36,7 @@ void RoutePlanner::AddNeighbors(RouteModel::Node *current_node) {
 current_node->FindNeighbors();
 for(RouteModel::Node *node : current_node->neighbors){
     node->parent = current_node;
-    node->g_value = distance + current_node->distance(*(current_node->parent));
+    node->g_value = current_node->g_value + current_node->distance(*node));
     node->h_value = CalculateHValue(node);
     open_list.push_back(node);
     node->visited = true ;
@@ -50,7 +50,7 @@ for(RouteModel::Node *node : current_node->neighbors){
 // - Create a pointer to the node in the list with the lowest sum.
 // - Remove that node from the open_list.
 // - Return the pointer.
-bool RoutePlanner::compare(const RouteModel::Node *a , const RouteModel::Node *b){
+bool compare(const RouteModel::Node *a , const RouteModel::Node *b){
     float sum1 = a->g_value + a->h_value;
     float sum2 = b->g_value + b->h_value;
     return sum1 > sum2 ;
@@ -102,14 +102,18 @@ void RoutePlanner::AStarSearch() {
     RouteModel::Node *current_node = nullptr;
 
     // TODO: Implement your solution here.
-    current_node = start_node;
-    current_node->visited = true ;
-    open_list.push_back(current_node);
+    start_node->visited = true ;
+    open_list.push_back(start_node);
 
     while (open_list.size() > 0)
     {
+         current_node = NextNode();
+        if(current_node->distance(*end_node) == 0){
+            m_Model.path = ConstructFinalPath(current_node);
+            break ;
+        }
         AddNeighbors(current_node);
-        current_node = NextNode();
+       
     }
     m_Model.path = ConstructFinalPath(current_node);
 }
