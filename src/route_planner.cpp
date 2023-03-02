@@ -56,7 +56,7 @@ bool compare(const RouteModel::Node *a , const RouteModel::Node *b){
     return sum1 > sum2 ;
 }
 RouteModel::Node *RoutePlanner::NextNode() {
- std::sort(open_list.begin() , open_list.end());
+ std::sort(open_list.begin() , open_list.end() , compare);
  RouteModel::Node *lowest_sum ;
  lowest_sum = open_list.back();
  open_list.pop_back();
